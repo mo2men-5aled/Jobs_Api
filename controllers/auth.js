@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
 
 //check for uppercase letters
 const isUpperCase = (string) => /^[A-Z]*$/.test(string);
@@ -53,10 +54,18 @@ const register = async (req, res) => {
 
     if (errorlist.length) res.json({ msg: errorlist });
     else {
+      //hash password
+      //generate a random byte genSalt("number of rounds")=>how many rondom bytes to generate
+      //the bigger the number the more secure the password
+      //but the more rounds you have the more processing power is going require
+      //so you have to find a balance between security and performance
+      //the default is 10 rounds
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(req.body.password, salt);
       const user = await User.create({
         name: req.body.name,
         email: req.body.email,
-        password: req.body.password,
+        password: hashedPassword,
       });
 
       res.status(201).json(user);
