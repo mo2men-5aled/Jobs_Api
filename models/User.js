@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema({
   password: { type: String },
 });
 
-UserSchema.pre("save", async function (next) {
+UserSchema.pre("save", async function () {
   //hash password
   //generate a random byte genSalt("number of rounds")=>how many rondom bytes to generate
   //the bigger the number the more secure the password
@@ -16,7 +16,6 @@ UserSchema.pre("save", async function (next) {
   //the default is 10 rounds
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
 module.exports = mongoose.model("User", UserSchema);
