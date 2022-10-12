@@ -66,7 +66,7 @@ const register = async (req, res) => {
         { expiresIn: "1h" }
       );
 
-      res.status(201).json({ user: { name: user.name }, token });
+      res.status(201).json({ user: { name: user.getName() }, token });
     }
   } catch (error) {
     res.json({ msg: error.message });
