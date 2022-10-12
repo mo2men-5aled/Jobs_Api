@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const bcrypt = require("bcryptjs");
 
 //check for uppercase letters
 const isUpperCase = (string) => /^[A-Z]*$/.test(string);
@@ -11,6 +12,7 @@ function containsCapital(str) {
   return res;
 }
 
+//regester user
 const register = async (req, res) => {
   var errorlist = [];
 
@@ -51,6 +53,7 @@ const register = async (req, res) => {
       errorlist.push("this email is registered");
     }
 
+    //
     if (errorlist.length) res.json({ msg: errorlist });
     else {
       const user = await User.create({
@@ -67,8 +70,48 @@ const register = async (req, res) => {
   }
 };
 
+//login user
 const login = async (req, res) => {
-  res.send("login user");
+  const { email, password } = req.body;
+  const errorlog = [];
+
+  //check if email found
+  if (!email) {
+    errorlog.push("email must be provided");
+  }
+
+  //check if password found
+  if (!password) {
+    errorlog.push("password must be provided");
+  }
+
+  //if email and password found
+  if (email && password) {
+    //check if email is registered
+    const user = await User.findOne({ email });
+
+    //if email is not registered
+    if (!user) {
+      errorlog.push("user not found");
+    }
+
+    //if email is registered
+    if (user) {
+      //check if password is correct
+      const isPasswordMatch = await user.comparePassword(password);
+      //if password is not correct
+      if (!isPasswordMatch) {
+        errorlog.push("Wrong password");
+      } else {
+        //if password is correct
+        const token = user.createJWT(); //create token
+        res.status(200).json({ user: { name: user.name }, token });
+      }
+    }
+  }
+  if (errorlog.length) {
+    res.json({ msg: errorlog });
+  }
 };
 
 module.exports = { register, login };
