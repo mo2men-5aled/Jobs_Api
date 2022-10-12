@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
 //check for uppercase letters
@@ -59,7 +60,13 @@ const register = async (req, res) => {
         password: req.body.password,
       });
 
-      res.status(201).json(user);
+      const token = jwt.sign(
+        { userId: user._id, name: user.name },
+        "jwtsecret",
+        { expiresIn: "1h" }
+      );
+
+      res.status(201).json({ user: { name: user.name }, token });
     }
   } catch (error) {
     res.json({ msg: error.message });
