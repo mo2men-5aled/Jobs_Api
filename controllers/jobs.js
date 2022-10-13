@@ -17,7 +17,7 @@ const getJob = async (req, res) => {
   const errorlog = [];
 
   if (req.params.id.length !== 24) {
-    errorlog.push("invalid id");
+    errorlog.push(`no jobs found with id ${req.params.id}`);
   } else {
     const job = await Job.findOne({
       createdBy: req.user.userId,
@@ -25,7 +25,7 @@ const getJob = async (req, res) => {
     });
 
     if (!job) {
-      errorlog.push("job not found");
+      errorlog.push(`no jobs found with id ${req.params.id}`);
     } else {
       res.status(200).json({ job });
     }
