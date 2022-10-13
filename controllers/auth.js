@@ -1,5 +1,4 @@
 const User = require("../models/User");
-const bcrypt = require("bcryptjs");
 
 //check for uppercase letters
 const isUpperCase = (string) => /^[A-Z]*$/.test(string);
