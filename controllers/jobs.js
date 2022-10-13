@@ -14,7 +14,25 @@ const getAllJobs = async (req, res) => {
 };
 
 const getJob = async (req, res) => {
-  res.json(req.user);
+  const errorlog = [];
+
+  if (req.params.id.length !== 24) {
+    errorlog.push("invalid id");
+  } else {
+    const job = await Job.findOne({
+      createdBy: req.user.userId,
+      _id: req.params.id,
+    });
+
+    if (!job) {
+      errorlog.push("job not found");
+    } else {
+      res.status(200).json({ job });
+    }
+  }
+  if (errorlog.length > 0) {
+    res.status(404).json({ msg: errorlog });
+  }
 };
 const createJob = async (req, res) => {
   const { company, position } = req.body;
