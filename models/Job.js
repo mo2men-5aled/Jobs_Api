@@ -11,7 +11,7 @@ const JobSchema = new mongoose.Schema(
     },
     createdBy: { type: mongoose.Types.ObjectId, ref: "User" },
   },
-  { timestamps: true }
+  { timestamps: true } // this will add createdAt and updatedAt fields
 );
 
 module.exports = mongoose.model("Job", JobSchema);

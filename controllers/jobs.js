@@ -1,7 +1,16 @@
 const Job = require("../models/Job");
 
 const getAllJobs = async (req, res) => {
-  res.json(req.user);
+  const errorlog = [];
+  const jobs = await Job.find({ createdBy: req.user.userId }).sort("createdAt");
+  if (!jobs.length) {
+    errorlog.push("no jobs found");
+  }
+  if (errorlog.length > 0) {
+    res.status(404).json({ msg: errorlog });
+  } else {
+    res.status(200).json({ jobs });
+  }
 };
 
 const getJob = async (req, res) => {
@@ -31,7 +40,7 @@ const createJob = async (req, res) => {
         "position name is too long, it must be lower than 100 characters",
     });
   }
-  console.log(req.user.userId);
+
   if (errorlog.length > 0) {
     return res.status(400).json({ msg: errorlog });
   } else {
