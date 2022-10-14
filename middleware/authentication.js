@@ -5,6 +5,7 @@ const auth = async (req, res, next) => {
   //check header
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer")) {
+    //check if header is present and starts with Bearer
     return res.status(401).json({ msg: "no token provided" });
   }
 
