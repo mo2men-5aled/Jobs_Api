@@ -35,7 +35,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(
   cors({
-    origin: "https://main--shimmering-sunburst-377596.netlify.app/",
+    origin: "*",
   })
 );
 app.use(xss());
