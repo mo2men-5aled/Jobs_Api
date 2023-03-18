@@ -79,7 +79,7 @@ const getJob = async (req, res) => {
 const updateJob = async (req, res) => {
   const errorlog = [];
 
-  const { company, position } = req.body;
+  const { company, position, status } = req.body;
   if (!company) {
     errorlog.push("company cannot be empty");
   }
@@ -91,7 +91,7 @@ const updateJob = async (req, res) => {
   if (company && position) {
     const job = await Job.findOneAndUpdate(
       { createdBy: req.user.userId, _id: req.params.id },
-      { company: company, position: position },
+      { company: company, position: position, status: status },
       { new: true }
     );
     if (!job) {
